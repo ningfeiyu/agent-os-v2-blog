@@ -3,131 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent OS v2.0 优化实战：从架构规范到可落地的技能包</title>
+    <title>Agent OS v2.0 Blog - Agent OS v2.0 Blog</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; color: #1a1a2e; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%); min-height: 100vh; padding: 2rem 1rem; }
-        article { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 3rem; }
-        header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e8e8f0; }
-        h1 { font-size: 2.2rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; line-height: 1.3; }
-        .meta { display: flex; gap: 1.5rem; color: #64748b; font-size: 0.9rem; }
-        .tags { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
-        .tag { background: #eef2ff; color: #3730a3; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 500; }
-        .lead { font-size: 1.15rem; color: #475569; margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border-left: 4px solid #3b82f6; }
-        h2 { font-size: 1.5rem; font-weight: 600; color: #0f172a; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #eef2ff; }
-        h3 { font-size: 1.15rem; font-weight: 600; color: #1e293b; margin: 1.5rem 0 0.75rem; }
-        p { margin-bottom: 1rem; color: #334155; }
-        code { font-family: "SF Mono", "Fira Code", monospace; background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #c026d3; }
-        pre { background: #0f172a; color: #e2e8f0; padding: 1.5rem; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; font-size: 0.85rem; line-height: 1.6; }
-        pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
-        ul, ol { margin: 1rem 0 1rem 1.5rem; color: #334155; }
-        li { margin-bottom: 0.5rem; }
-        .callout { background: #ecfdf5; border-left: 4px solid #10b981; padding: 1rem 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
-        .callout-title { font-weight: 600; color: #065f46; margin-bottom: 0.5rem; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; color: #1a1a2e; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #0f172a; border-bottom: 2px solid #eef2ff; padding-bottom: 0.5rem; }
+        code { background: #f1f5f9; padding: 2px 4px; border-radius: 4px; }
+        pre { background: #0f172a; color: #e2e8f0; padding: 1.5rem; border-radius: 8px; overflow-x: auto; }
+        .meta { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .tags { margin: 1rem 0; }
+        .tag { background: #eef2ff; color: #3730a3; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; margin-right: 0.5rem; display: inline-block; }
+        nav a { color: #3b82f6; text-decoration: none; margin-right: 1rem; }
+        nav a:hover { text-decoration: underline; }
         footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e8e8f0; color: #94a3b8; font-size: 0.85rem; text-align: center; }
-        .diff { background: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem 1.5rem; border-radius: 0 12px 12px 0; margin: 1.5rem 0; }
-        .diff-title { font-weight: 600; color: #991b1b; margin-bottom: 0.5rem; }
     </style>
 </head>
 <body>
+    
     <article>
         <header>
-            <h1>Agent OS v2.0 优化实战：从架构规范到可落地的技能包</h1>
-            <div class="meta">
-                <span>2026-08-13</span>
-                <span>作者: ling li</span>
-                <span>阅读: 8 min</span>
-            </div>
-            <div class="tags">
-                <span class="tag">Agent OS</span>
-                <span class="tag">Context Engineering</span>
-                <span class="tag">Multi-Agent</span>
-                <span class="tag">Memory Architecture</span>
-                <span class="tag">Hermes</span>
-            </div>
+            <h1>Agent OS v2.0 Blog</h1>
+            <div class="meta">2026-08-13 · 作者: ling li</div>
         </header>
-        <div class="lead">
-            <strong>一句话总结：</strong> 将 2026 年 Agent 工程共识（混合检索、Orchestrator-Subagent-Skill 三元架构、记忆投毒防御、成本可观测）固化为 Hermes 可直接调用的 <code>agent-os-v2</code> 技能，完成从「文档规范」到「可执行约束」的跨越。
-        </div>
-        <h2>背景：为什么要做这个优化？</h2>
-        <p>用户提供了完整规范文档，涵盖了七层架构、记忆三层模型、混合检索、子代理编排、防毒机制等 2026 年主流实践。但规范本身是「静态文档」，Agent 无法直接在推理时约束自身行为。</p>
-        <p>目标很明确：<strong>把核心宪法、运作流、执行约束封装成 Hermes Skill，使其成为每轮推理前的隐式上下文</strong>。</p>
-        <h2>核心改动：从文档到技能的三次提炼</h2>
-        <h3>1. 提炼「最高优先级」约束（CONST-01~10）</h3>
-        <p>v2.0 新增的三条宪法是架构的灵魂，必须置于技能最显眼位置：</p>
-        <ul>
-            <li><strong>CONST-08 防毒原则：</strong> 外部输入（网页、工具、Agent 产出）强制落入 <code>provisional/</code> 隔离区，经来源校验后方可固化</li>
-            <li><strong>CONST-09 隔离原则：</strong> 子代理默认不继承主代理技能与记忆，需显式授权</li>
-            <li><strong>CONST-10 可观测原则：</strong> 任务必须记录 Token 消耗与成本，超预算需用户确认</li>
-        </ul>
-        <h3>2. 固化「写入流水线」为硬性步骤</h3>
-        <p>原来的文档描述是流程图，技能里变成了强制检查清单：</p>
-        <pre><code>Origin Classifier -> Importance Scorer -> Duplicate Detector
--> Conflict Detector -> Integrity Guard -> Schema Validator -> Write</code></pre>
-        <p>关键点：<code>origin=external_tool</code> 的内容<strong>绝不能</strong>直接写入 <code>knowledge/verified/</code>，这是防毒的底线。</p>
-        <h3>3. 明确「编排架构」的触发边界</h3>
-        <p>不是所有任务都需要 Orchestrator。技能里写明了判断标准：</p>
-        <div class="callout">
-            <div class="callout-title">[+] 需要编排（转交 Orchestrator）</div>
-            <ul><li>任务可分解为多个相互独立的子任务</li><li>子任务需要不同的「专注上下文」（搜索 vs 校验 vs 执行）</li><li>存在「生成 - 校验 - 修正」循环（Validator 模式）</li><li>需要并行执行以节省时间</li></ul>
-        </div>
-        <div class="callout">
-            <div class="callout-title">[-] 不需要编排（单 Agent 直接处理）</div>
-            <ul><li>单一知识检索/问答</li><li>单文件编辑</li><li>单步骤决策</li></ul>
-        </div>
-        <h2>技能落地过程中的两个坑</h2>
-        <h3>坑 1：Skill 元数据格式不符合 Hermes 规范</h3>
-        <p>第一版创建失败，报错：<code>name 必须小写</code>、<code>缺少 description/author/license</code>、<code>缺少 metadata.hermes.tags</code>。</p>
-        <div class="diff">
-            <div class="diff-title">修复前 -> 修复后</div>
-            <pre><code># 修复前（不合规）
-name: "Agent OS v2.0 系统规范"
-# 缺少 author, license, metadata.hermes
+        
+<div class="lead"><strong>Agent OS v2.0 实战系列</strong> - 从架构规范到落地代码的完整记录</div>
+<h2>最新文章</h2>
+<article style="margin-bottom: 2rem; padding: 1.5rem; border: 1px solid #e8e8f0; border-radius: 12px;">
+    <h3><a href="/post1.html" style="color: #0f172a; text-decoration: none;">Agent OS v2.0 ��化实战：从架构规范到可落地的技能包</a></h3>
+    <div class="meta">2026-08-13 · Category: Architecture</div>
+    <div class="tags">
+        <span class="tag">Agent OS</span>
+        <span class="tag">Context Engineering</span>
+        <span class="tag">Multi-Agent</span>
+        <span class="tag">Memory Architecture</span>
+        <span class="tag">Hermes</span>
+    </div>
+    <p>将 2026 年 Agent ��程共识（混合��索、Orchestrator-Subagent-Skill 三元架构、记��投��防御、成本可观��）��化为 Hermes 可直接调用的 <code>agent-os-v2</code> ��能，完成从「文档规范」到「可��行约束」的��越。</p>
+</article>
+<article style="margin-bottom: 2rem; padding: 1.5rem; border: 1px solid #e8e8f0; border-radius: 12px;">
+    <h3><a href="/post2.html" style="color: #0f172a; text-decoration: none;">Agent OS v2.0 实战：定义第一个 Validator 子代理</a></h3>
+    <div class="meta">2026-08-13 · Category: Multi-Agent</div>
+    <div class="tags">
+        <span class="tag">Subagent</span>
+        <span class="tag">Validator</span>
+        <span class="tag">Orchestrator</span>
+    </div>
+    <p>基于 <code>agent-os-v2</code> 规范，定义第一个子代理 <strong>Validator</strong>，��行 CONST-09 ��离原则，实现「生成与校验分离」。这是多代理��作架构的基石。</p>
+</article>
 
-# 修复后（合规）
-name: "agent-os-v2"
-author: "ling li"
-license: "MIT"
-metadata:
-  hermes:
-    tags: [agent-os, architecture, memory, orchestration, constitution]</code></pre>
-        </div>
-        <h3>坑 2：用户明确要求「不要 When to Use 章节」</h3>
-        <p>Hermes 规范建议有 <code>## When to Use</code>，但用户偏好「结构紧凑、直接可用」。</p>
-        <p><strong>决策：</strong> 删除该章节，将触发条件内化到 <code>trigger</code> 字段与正文约束中。技能最终形态：纯前端元数据 + 正文约束，无冗余章节。</p>
-        <h2>最终产物：agent-os-v2 技能结构</h2>
-        <pre><code>agent-os-v2/
-  SKILL.md          # 核心约束
-  （无额外引用文件，保持极简）</code></pre>
-        <p><strong>核心字段：</strong></p>
-        <ul>
-            <li><code>trigger</code>：系统配置、任务编排、记忆管理、工作流优化</li>
-            <li><code>requires_memory</code>：<code>[core/CONSTITUTION.md, governance/COST_LOG.md]</code></li>
-            <li><code>scope</code>：<code>main_context</code>（主上下文生效，不限制子代理）</li>
-        </ul>
-        <h2>验证：技能生效后的行为差异</h2>
-        <table style="width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.9rem;">
-            <thead><tr style="background:#f1f5f9;"><th style="padding:0.75rem; text-align:left; border:1px solid #e2e8f0;">场景</th><th style="padding:0.75rem; text-align:left; border:1px solid #e2e8f0;">生效前</th><th style="padding:0.75rem; text-align:left; border:1px solid #e2e8f0;">生效后</th></tr></thead>
-            <tbody>
-                <tr><td style="padding:0.75rem; border:1px solid #e2e8f0;">工具返回结果想写入知识库</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">直接写入</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">强制落 <code>provisional/</code>，标注 <code>origin=external_tool</code>，待用户确认</td></tr>
-                <tr style="background:#fafafa;"><td style="padding:0.75rem; border:1px solid #e2e8f0;">启动子代理做复杂任务</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">子代理继承所有技能/记忆</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">显式声明边界、授权技能、只读记忆范围</td></tr>
-                <tr><td style="padding:0.75rem; border:1px solid #e2e8f0;">长任务运行中</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">无成本感知</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">记录 Token/成本到 <code>COST_LOG.md</code>，超阈值暂停确认</td></tr>
-                <tr style="background:#fafafa;"><td style="padding:0.75rem; border:1px solid #e2e8f0;">发现知识冲突</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">可能静默覆盖</td><td style="padding:0.75rem; border:1px solid #e2e8f0;">显式提示用户决策，旧版本归档</td></tr>
-            </tbody>
-        </table>
-        <h2>后续：Week 5 清单开始执行</h2>
-        <p>按规范附录 A，下一步是编排能力建设：</p>
-        <ol>
-            <li>定义第一个 Subagent（建议从 <strong>Validator</strong> 开始，风险最低）</li>
-            <li>定义第一个 Skill（从高频重复任务切入，如「收入结构分析」）</li>
-            <li>跑通 Orchestrator 调度的端到端测试</li>
-            <li>建立 <code>COST_LOG.md</code> 基线，确认成本可观测</li>
-        </ol>
-        <h2>结语</h2>
-        <p>规范的价值不在于写得多漂亮，而在于<strong>能否约束下一行代码的行为</strong>。把 v2.0 宪法做成 Skill，是让架构「长牙齿」的最小可行动作。</p>
-        <p>现在，每次对话开始时，<code>agent-os-v2</code> 已经在上下文里了。接下来的每一个决策，都会先过一遍这套规则。</p>
-        <footer><p>基于 Agent OS v2.0 规范优化 | 部署于 Vercel | 源码见 Hermes Skills 目录</p></footer>
+        <footer>基于 Agent OS v2.0 规范��化 · 部署于 Vercel</footer>
     </article>
 </body>
 </html>
-<!-- deploy trigger -->
