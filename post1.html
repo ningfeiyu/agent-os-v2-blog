@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent OS v2.0 ��化实战 - Agent OS v2.0 Blog</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; color: #1a1a2e; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #0f172a; border-bottom: 2px solid #eef2ff; padding-bottom: 0.5rem; }
+        code { background: #f1f5f9; padding: 2px 4px; border-radius: 4px; }
+        pre { background: #0f172a; color: #e2e8f0; padding: 1.5rem; border-radius: 8px; overflow-x: auto; }
+        .meta { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .tags { margin: 1rem 0; }
+        .tag { background: #eef2ff; color: #3730a3; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; margin-right: 0.5rem; display: inline-block; }
+        nav a { color: #3b82f6; text-decoration: none; margin-right: 1rem; }
+        nav a:hover { text-decoration: underline; }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e8e8f0; color: #94a3b8; font-size: 0.85rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <nav style="margin-bottom:2rem;"><a href="/">首页</a> | <a href="/post1.html">文章一</a> | <a href="/post2.html">文章二</a></nav>
+    <article>
+        <header>
+            <h1>Agent OS v2.0 ��化实战</h1>
+            <div class="meta">2026-08-13 · 作者: ling li</div>
+        </header>
+        
+<div class="lead"><strong>一句话总结：</strong> 将 2026 年 Agent ��程共识��化为 Hermes <code>agent-os-v2</code> ��能，完成从「文档规范」到「可��行约束」的��越。</div>
+<h2>背景：为什么要做这个��化？</h2>
+<p>用户提供了完整规范文档，����了七��架构、记��三��模型、混合��索、子代理编排、防��机制等 2026 年主流实��。但规范本身是「静态文档」，Agent 无法直接在推理时约束自身行为。</p>
+<p>目标很明确：<strong>把��心��法、运作流、��行约束封装成 Hermes Skill，使其成为每轮推理前的��式上下文</strong>。</p>
+<h2>��心改动：从文档到技能的三次提��</h2>
+<h3>1. 提��「最高��先级」约束（CONST-01~10）</h3>
+<p>v2.0 新增的三条��法是架构的灵��：</p>
+<ul>
+    <li><strong>CONST-08 ����原则：</strong> 外部输入强制落入 <code>provisional/</code> ��离区，经来源校验后方可��化</li>
+    <li><strong>CONST-09 ��离原则：</strong> 子代理默认不继承主代理技能与记��，需显式授权</li>
+    <li><strong>CONST-10 可观��原则：</strong> 任务必须记录 Token �����与成本，超��算需用户确认</li>
+</ul>
+<h3>2. ��化「写入流水线」为��性步��</h3>
+<pre><code>Origin Classifier -> Importance Scorer -> Duplicate Detector
+-> Conflict Detector -> Integrity Guard -> Schema Validator -> Write</code></pre>
+<h3>3. 明确「编排架构」的��发边界</h3>
+<p>不是所有任务都需要 Orchestrator。</p>
+<h2>技能落地过程中的两个��</h2>
+<h3>�� 1：Skill 元数据格式不符合 Hermes 规范</h3>
+<p>第一版创建失败，报错：<code>name ���须小写</code>、<code>��少 description/author/license</code> 等。</p>
+<h3>�� 2：用户明确要求「不要 When to Use 章节」</h3>
+<p>决策：删除该章节，将��发条件内化到 <code>trigger</code> 字段与正文约束中。</p>
+<h2>最终产物：<code>agent-os-v2</code> ��能结构</h2>
+<pre><code>agent-os-v2/
+  SKILL.md          # ��心约束
+  （无��外引用文件，保持极简）</code></pre>
+<h2>验证：技能生效后的行为差��</h2>
+<table style="width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.9rem;">
+<thead><tr style="background:#f1f5f9;"><th style="padding:0.5rem; border:1px solid #e2e8f0;">场景</th><th style="padding:0.5rem; border:1px solid #e2e8f0;">生效前</th><th style="padding:0.5rem; border:1px solid #e2e8f0;">生效后</th></tr></thead>
+<tbody>
+<tr><td style="padding:0.5rem; border:1px solid #e2e8f0;">工具返回结果想写入知识库</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">直接写入</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">强制落 provisional/，待用户确认</td></tr>
+<tr style="background:#fafafa;"><td style="padding:0.5rem; border:1px solid #e2e8f0;">启动子代理做复杂任务</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">子代理继承所有技能/记��</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">显式声明边界、授权技能</td></tr>
+<tr><td style="padding:0.5rem; border:1px solid #e2e8f0;">长任务运行中</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">无成本感知</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">记录 Token/成本，超��值��停确认</td></tr>
+<tr style="background:#fafafa;"><td style="padding:0.5rem; border:1px solid #e2e8f0;">发现知识��突</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">可能静默����</td><td style="padding:0.5rem; border:1px solid #e2e8f0;">显式提示用户决策，旧版本归档</td></tr>
+</tbody>
+</table>
+<h2>后续：Week 5 ��单开始��行</h2>
+<ol>
+    <li>定义第一个 Subagent（建议从 Validator ��始）</li>
+    <li>定义第一个 Skill（从高��重复任务切入）</li>
+    <li>��通 Orchestrator ���度的端到端��试</li>
+    <li>建立 COST_LOG.md ��线</li>
+</ol>
+<h2>结语</h2>
+<p>规范的价值不在于写得多��亮，而在于<strong>能否约束下一行代码的行为</strong>。把 v2.0 ��法做成 Skill，是让架构「长牙��」的最小可行动作。</p>
+
+        <footer>基于 Agent OS v2.0 规范��化 · 部署于 Vercel</footer>
+    </article>
+</body>
+</html>
