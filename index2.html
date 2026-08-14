@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent OS v2.0 实战：定义第一个 Validator 子代理</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { color: #0070f3; }
+        code { background: #eee; padding: 2px 4px; border-radius: 4px; }
+        pre { background: #222; color: #fff; padding: 15px; border-radius: 8px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Agent OS v2.0 实战：定义第一个 Validator 子代理</h1>
+    <p>在上一篇中，我们完成了架构的部署。本篇我们将践行 <strong>CONST-09（子代理隔离原则）</strong>，构建第一个专职子代理：<strong>Validator</strong>。</p>
+    
+    <h2>为什么第一个是 Validator？</h2>
+    <p>它是架构中的“质量守门员”。根据 <code>agent-os-v2</code> 技能的定义，它不需要继承主代理的技能，只负责复核任务产出，风险最低，便于测试编排架构。</p>
+    
+    <h2>Step 1: 定义子代理配置文件</h2>
+    <p>我们在 <code>agents/subagents/validator.md</code> 中定义：</p>
+    <pre>
+---
+id: A002
+name: Validator
+role: 校验产出是否符合预设规则
+inherits_skills: []
+readable_memory: [core/CONSTITUTION.md]
+max_turns: 3
+---
+## 校验循环
+1. 接收候选产出
+2. 对照规则清单检查
+3. 不通过则返回错误项，通过则标记 approved。
+    </pre>
+
+    <h2>Step 2: 主代理调度测试</h2>
+    <p>使用 <code>Orchestrator</code> 指令：</p>
+    <pre><code>/dispatch agent:validator task:"复核产出物格式" context:"候选产出: [...]"</code></pre>
+
+    <h2>小结</h2>
+    <p>通过这个 Validator，我们实现了“生成与校验分离”，这是多代理协作的第一步。</p>
+    <footer><p>持续更新中...</p></footer>
+</body>
+</html>
